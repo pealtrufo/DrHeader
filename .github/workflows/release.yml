@@ -2,7 +2,7 @@ name: Dr Header Release Task
 
 on: 
   push:
-    branches: [ master ]
+    branches: [ test-bumpversion ]
 
 jobs:
   build:
@@ -38,47 +38,5 @@ jobs:
       - name: Safety dependency scan
         run: python -m safety check
 
-      - name: Make Wheel
-        run: |
-          python3 setup.py sdist bdist_wheel
-          
-      - name: Dump build info for release
-        run: |
-           git log --pretty=oneline > changelog
-           python3 setup.py --version > version     
-           
       - name: Get bumpversion
         run: echo ::set-env name=VERSION::$(grep -i 'current_version = ' setup.cfg |  tr -d 'current_version = ')  
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.VERSION}}
-          release_name: Release v${{ env.VERSION }}
-          draft: false
-          prerelease: false
-        
-      - name: Upload Wheel
-        id: upload_wheel
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./dist/drheader-${{ env.VERSION }}-py2.py3-none-any.whl
-          asset_name: DrHeader Wheel
-          asset_content_type: application/x-python-wheel
-      
-      - name: Upload Changelog
-        id: upload_changelog
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: changelog
-          asset_name: DrHeader changelog
-          asset_content_type: text/plain
