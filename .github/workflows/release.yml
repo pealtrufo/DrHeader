@@ -56,3 +56,6 @@ jobs:
         run: |
           echo ::set-env name=VERSION::$(grep -i 'current_version = ' setup.cfg |  tr -d 'current_version = ')
           grep -i 'current_version = ' setup.cfg |  tr -d 'current_version = '
+          
+      - name: Get long desc for pypi
+        run: sed '/](assets\/img/d' README.md
