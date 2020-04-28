@@ -29,7 +29,15 @@ jobs:
           git config --local user.name "GitHub Action"
           bumpversion minor
           cat setup.py
+          cat setup.cfg
+          cat drheader/__init__.py
       
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: 'test-bumpversion'
+    
       - name: Test with Nosetests
         run: python -m nose --with-xunit --xunit-file=${{ matrix.python-version }}.results.xml
 
