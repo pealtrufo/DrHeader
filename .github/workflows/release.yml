@@ -28,6 +28,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           bumpversion minor
+          cat setup.py
       
       - name: Test with Nosetests
         run: python -m nose --with-xunit --xunit-file=${{ matrix.python-version }}.results.xml
