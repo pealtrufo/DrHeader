@@ -24,7 +24,7 @@ jobs:
         run: pip install -r requirements_dev.txt
             
       - name: BumpVersion
-        run: bumpversion      
+        run: bumpversion minor
       
       - name: Test with Nosetests
         run: python -m nose --with-xunit --xunit-file=${{ matrix.python-version }}.results.xml
