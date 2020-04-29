@@ -1,8 +1,5 @@
 name: Dr Header Pull Request to master handler
-on: 
-  pull_request:
-    branches:
-      - master
+on: pull_request
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,12 +37,17 @@ jobs:
       - name: Safety dependency scan
         run: python -m safety check
         
-      - name: Checkout origin branch
+      - name: What is the destination branch
+        run: echo ${{github.base_ref}}
+        
+      - name: Checkout origin branch if PR 'to-branch' is master
+        if: github.base_ref == 'master'
         uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
 
-      - name: BumpVersion
+      - name: BumpVersion if PR 'to-branch' is master
+        if: github.base_ref == 'master'
         run: |
           grep -i 'current_version = ' setup.cfg |  tr -d 'current_version = '
           git config --local user.email "action@github.com"
@@ -53,7 +55,8 @@ jobs:
           bumpversion minor
           grep -i 'current_version = ' setup.cfg |  tr -d 'current_version = '
 
-      - name: Push changes
+      - name: Push changes if PR 'to-branch' is master
+        if: github.base_ref == 'master'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
