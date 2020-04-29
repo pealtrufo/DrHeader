@@ -28,7 +28,7 @@ jobs:
           grep -i 'current_version = ' setup.cfg |  tr -d 'current_version = '
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          bumpversion minor
+          bumpversion
           cat setup.py
           cat setup.cfg
           cat drheader/__init__.py
