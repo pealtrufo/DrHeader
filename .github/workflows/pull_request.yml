@@ -37,6 +37,9 @@ jobs:
       - name: Safety dependency scan
         run: python -m safety check
         
+      - name: What is the destination branch
+        run: echo ${{github.base_ref}}
+        
       - name: Checkout origin branch
         if: github.base_ref == 'refs/heads/master'
         uses: actions/checkout@v2
